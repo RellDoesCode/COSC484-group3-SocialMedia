@@ -8,17 +8,29 @@
 <body>
 
     <main class="profile-container">
+        <div class="profile-banner">
+            <img src="../images/banner-placeholder.png" alt="Profile Banner" id="bannerImage">
+        </div>
 
         <section class="profile-header">
-            <div class="profile-avatar">
-                <img src="../images/avatar-placeholder.png" alt="Profile Avatar">
+            <div class="profile-avatar" id="avatarWrapper">
+                <img src="../images/avatar-placeholder.png" alt="Profile Avatar" id="avatarImage">
             </div>
+
             <div class="profile-info">
-                <h2>@tano_user</h2>
-                <p class="bio">This is a bio! It could describe you, your hobbies, or anything you like.</p>
-                <button class="edit-profile-button">Edit Profile</button>
+                <h2 id="username">@tano_user</h2>
+
+                <p class="bio" id="bioText">
+                    This is a bio! It could describe you, your hobbies, or anything you like.
+                </p>
+                <textarea class="bio-edit" id="bioEdit" style="display: none;"></textarea>
+
+                <button class="edit-profile-button" id="editProfileBtn">Edit Profile</button>
             </div>
         </section>
+
+        <input type="file" id="avatarInput" accept="image/*" hidden>
+        <input type="file" id="bannerInput" accept="image/*" hidden>
 
         <section class="profile-posts">
             <h3>Posts</h3>
@@ -57,6 +69,76 @@
 
         const postsContainer = document.querySelector(".profile-posts .posts-list");
         renderPosts(postsContainer, userPosts);
+
+        /* Edit mode logic below */
+        const editBtn = document.getElementById("editProfileBtn");
+        const avatar = document.getElementById("avatarImage");
+        const banner = document.getElementById("bannerImage");
+        const bioText = document.getElementById("bioText");
+        const bioEdit = document.getElementById("bioEdit");
+        const avatarInput = document.getElementById("avatarInput");
+        const bannerInput = document.getElementById("bannerInput");
+
+        let editing = false;
+
+        editBtn.addEventListener("click", () => {
+            editing = !editing;
+
+            if (editing) {
+                enterEditMode();
+            } else {
+                saveProfileChanges();
+            }
+        });
+
+        function enterEditMode() {
+            editBtn.textContent = "Save Changes";
+
+            //Make avatar clickable
+            avatar.classList.add("editable");
+            avatar.onclick = () => avatarInput.click();
+
+            //Make banner clickable
+            banner.classList.add("editable");
+            banner.onclick = () => bannerInput.click();
+
+            //Enable bio editing
+            bioEdit.value = bioText.textContent;
+            bioText.style.display = "none";
+            bioEdit.style.display = "block";
+            bioEdit.focus();
+        }
+
+        avatarInput.addEventListener("change", () => {
+            const file = avatarInput.files[0];
+            if (file) avatar.src = URL.createObjectURL(file);
+        });
+
+        bannerInput.addEventListener("change", () => {
+            const file = bannerInput.files[0];
+            if (file) banner.src = URL.createObjectURL(file);
+        });
+
+        function saveProfileChanges() {
+            editBtn.textContent = "Edit Profile";
+
+            avatar.classList.remove("editable");
+            avatar.onclick = null;
+
+            banner.classList.remove("editable");
+            banner.onclick = null;
+
+            //Save bio text
+            bioText.textContent = bioEdit.value;
+            bioEdit.style.display = "none";
+            bioText.style.display = "block";
+
+            //For the future: send these changes to backend
+            console.log("Saved bio: ", bioText.textContent);
+            console.log("Avatar src: ", avatar.src);
+            console.log("Banner src: ", banner.src);
+        }
+
     </script>
 
 </body>
