@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import Navbar from "../components/navbar.jsx";
 
 const FAQ_ITEM = ({ question, answer }) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   return (
-    <section className={`faq-box ${open ? "" : "closed"}`}>
+    <section className={`faq-box ${open ? "active" : ""}`}>
       <h3 className="faq-question">{question}</h3>
       {open && <p className="faq-answer">{answer}</p>}
       <button className="toggle" onClick={() => setOpen(!open)}>
@@ -35,10 +35,6 @@ export default function FAQ() {
           answer="Yes, but only we know them."
         />
       </main>
-
-      <footer>
-        <p>© 2025 TanoScene</p>
-      </footer>
     </>
   );
 }

@@ -223,10 +223,6 @@ export default function Home() {
           )}
         </section>
       </main>
-
-      <footer>
-        <p>© 2025 TanoScene</p>
-      </footer>
     </>
   );
 }
